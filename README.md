@@ -1,2 +1,7 @@
-# Scores-on-Blockchain-DAPPS
-Simple Scores on Blockchain - DAPPS
+# Blockchain workshop
+
+Start UI:
+
+```
+yarn && yarn build && yarn ui
+```
