@@ -101,7 +101,18 @@ export function App() {
     }
 
     const CompiledContractArtifact = require(`../abi/ERC20.json`);
-    const SUDT_PROXY_CONTRACT_ADDRESS = "0x16C024484E7531338ce849b8621c4F15C2436e3d";
+    const SUDT_PROXY_CONTRACT_ADDRESS = "0x70E9C8cd289d78B874e5F4b8FfD95df37B3203Cb";
+
+    async function getSUDTBalance(account: string, web3: Web3, polyjuiceAddress:string) {
+        console.log(polyjuiceAddress);
+        const contract = new web3.eth.Contract(CompiledContractArtifact.abi, SUDT_PROXY_CONTRACT_ADDRESS);
+        const balance = await contract.methods.balanceOf(polyjuiceAddress).call({
+            from: account
+        })
+        console.log(balance);
+
+        return balance
+    }
 
     useEffect(() => {
         if (contract) {
@@ -178,6 +189,8 @@ export function App() {
                 setLayer2Address(l2Address);
                 const addressTranslator = new AddressTranslator();
                 const polyjuiceAddress = addressTranslator.ethAddressToGodwokenShortAddress(_accounts[0]);
+                const balance = await getSUDTBalance(_accounts[0], _web3, polyjuiceAddress);
+                setSudtBalance(balance);
             }
         })();
     });
@@ -243,6 +256,10 @@ export function App() {
                                 <td>  Your Layer 2 Deposit Address on Layer 1:</td>
                                 <td> <div className="textOverflow">{layer2Address}</div></td>
                             </tr>
+                             <tr>
+                                <td> Your SUDT balance:</td>
+                                <td> <b>{sudtBalance}</b></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -293,6 +310,11 @@ export function App() {
 
             </div>
 
+             <div className="bg1">
+                    Use the <a href="https://force-bridge-test.ckbapp.dev/bridge/Ethereum/Nervos" className="color-blue">Force bridge website</a> to transfer tokens from Ethereum to Nervos layer 2.<br />
+           Select the Ethereum asset and amount to transfer across the bridge. In the box marked "Recipient", you will specify the Nervos destination address for the funds: input your the Layer 2 Deposit Address on Layer 1 mentioned above.<br />        
+                    </div>
+            
             {/*
     Italy  https://iapp.fanatik.com.tr/resize/40x40/Logos/broadage/teams/Soccer/606.png
     Holland https://iapp.fanatik.com.tr/resize/40x40/Logos/broadage/teams/Soccer/2815.png
